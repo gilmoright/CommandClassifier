@@ -17,13 +17,7 @@ from ray.tune.suggest.hyperopt import HyperOptSearch
 from hyperopt import hp
 import time
 
-def load_data(data_config):
-    df = pd.read_csv(data_config["path_to_df"])
-    train_x_df = df.loc[df["subset"]=="train", data_config["input_column"]]
-    train_y_df = df.loc[df["subset"]=="train", data_config["target_columns"]]
-    test_x_df = df.loc[df["subset"]=="test", data_config["input_column"]]
-    test_y_df = df.loc[df["subset"]=="test", data_config["target_columns"]]
-    return train_x_df, train_y_df, test_x_df, test_y_df
+from RobotCommandClassifier import utils
 
 def calculate_metrics(test_y_df, test_pred, config):
     metrics_for_report = {}
@@ -53,39 +47,22 @@ def calculate_metrics(test_y_df, test_pred, config):
 
 def train_function(config):
     
-    train_x_df, train_y_df, test_x_df, test_y_df = load_data(config["data_config"])
+    train_x_df, train_y_df, valid_x_df, valid_y_df, _, _ = utils.load_data(config["data_config"])
     pipeline_list = []
     if "TfidfVectorizer" in config["vectorizers"]:
         pipeline_list.append(("tfidf_vectorizer", TfidfVectorizer(**config["vectorizers"]["TfidfVectorizer"])))
 
-    #classifier_class = globals()[config["classifier"]["class"]]
-    if config["classifier"]["class"]=="RandomForestClassifier":
-        classifier_class = RandomForestClassifier
-    elif config["classifier"]["class"]=="ExtraTreesClassifier":
-        classifier_class = ExtraTreesClassifier
-    elif config["classifier"]["class"]=="ExtraTreeClassifier":
-        classifier_class = ExtraTreeClassifier
-    elif config["classifier"]["class"]=="DecisionTreeClassifier":
-        classifier_class = DecisionTreeClassifier
-    elif config["classifier"]["class"]=="KNeighborsClassifier":
-        classifier_class = KNeighborsClassifier
-    elif config["classifier"]["class"]=="RadiusNeighborsClassifier":
-        classifier_class = RadiusNeighborsClassifier
+    classifier_class = utils.CLASSIFIERS_NAME_TO_CLASS[config["classifier"]["class"]]
     pipeline_list.append(("classifier", classifier_class(**config["classifier"]["params"])))
 
     pipe = Pipeline(pipeline_list)
     pipe.fit(train_x_df, train_y_df)
-    test_pred = pipe.predict(test_x_df)
+    valid_pred = pipe.predict(valid_x_df)
     
-    metrics_for_report = calculate_metrics(test_y_df, test_pred, config)
+    metrics_for_report = calculate_metrics(valid_y_df, valid_pred, config)
     tune.report(**metrics_for_report)
     return metrics_for_report[config["target_metric"]]
 
-
-from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier
-from sklearn.tree import ExtraTreeClassifier, DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
-from sklearn.linear_model import RidgeClassifier, RidgeClassifierCV
 subspaces_for_classifiers = {
     "RandomForestClassifier": {
             "class": "RandomForestClassifier",
