@@ -14,4 +14,4 @@ export PATH=$HOME/anaconda3/envs/rl_robots/bin:$PATH
 
 export LD_LIBRARY_PATH=/s/ls4/sw/cuda/10.1/lib64:/s/ls4/sw/cuda/10.1/nvvm/lib64:$HOME/installation_dists/cudnn-9.0-linux-x64-v7.1.ga/lib64:
 # RandomForestClassifier ExtraTreesClassifier ExtraTreeClassifier DecisionTreeClassifier KNeighborsClassifier RadiusNeighborsClassifier
-python Src/ray_tune_cls.py --algo_class RandomForestClassifier
+python RobotCommandClassifier/ray_tune_cls.py --algo_class RandomForestClassifier

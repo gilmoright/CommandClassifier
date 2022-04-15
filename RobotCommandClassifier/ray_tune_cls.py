@@ -19,31 +19,6 @@ import time
 
 from RobotCommandClassifier import utils
 
-def calculate_metrics(test_y_df, test_pred, config):
-    metrics_for_report = {}
-    if "correct_samples_perc" in config["report_metrics"]:
-        totalAbsCorrect = 0
-        for i in range(test_y_df.shape[0]):
-            row = test_y_df.iloc[i]
-            if (row.values==test_pred[i,:]).all():
-                totalAbsCorrect += 1
-        totalAbsCorrect = totalAbsCorrect / test_y_df.shape[0]
-        metrics_for_report["correct_samples_perc"] = totalAbsCorrect
-    if len(set(["avg_macro_f1", "avg_acc", "class_acc, class_macro_f1"]) & set(config["report_metrics"])) > 0:
-        avg_macro_f1, avg_acc = 0, 0
-        for i,c in enumerate(test_y_df.columns):
-            cls_report = classification_report(test_y_df[c], test_pred[:,i], output_dict="True")
-            avg_acc += cls_report["accuracy"]
-            avg_macro_f1 += cls_report['macro avg']["f1-score"]
-            if "class_acc" in config["report_metrics"]:
-                metrics_for_report["[{}]_acc".format(c)] = cls_report["accuracy"]
-            if "class_macro_f1" in config["report_metrics"]:
-                metrics_for_report["[{}]_macrof1".format(c)] = cls_report['macro avg']["f1-score"]
-        if "avg_macro_f1" in config["report_metrics"]:
-            metrics_for_report["avg_macro_f1"] = avg_macro_f1 / len(test_y_df.columns)
-        if "avg_acc" in config["report_metrics"]:
-            metrics_for_report["avg_acc"] = avg_acc / len(test_y_df.columns)
-    return metrics_for_report
 
 def train_function(config):
     
@@ -59,7 +34,7 @@ def train_function(config):
     pipe.fit(train_x_df, train_y_df)
     valid_pred = pipe.predict(valid_x_df)
     
-    metrics_for_report = calculate_metrics(valid_y_df, valid_pred, config)
+    metrics_for_report = utils.calculate_metrics(valid_y_df, valid_pred, config)
     tune.report(**metrics_for_report)
     return metrics_for_report[config["target_metric"]]
 
