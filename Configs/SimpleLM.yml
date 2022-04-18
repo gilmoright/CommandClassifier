@@ -1,0 +1,93 @@
+rubert_tiny_multilabel_fold0:
+  Data:
+    path_to_df: /s/ls4/users/grartem/RL_robots/CommandClassifier/Data/Interim/merged_with_labels_11_patterns_split.csv
+    target_columns: ['y', 'action', 'direction', 'meters', 'degshours', 'object1', 'nearest', 'relation1', 'object2', 'relation2', 'object3', "self", "gaze"]
+    input_column: 'x'
+    test_only_on_fold: 0
+  Report:
+    report_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/reports/rubert_tiny_multilabel_fold0
+    report_metrics: ["correct_samples_perc", "avg_macro_f1", "avg_acc", "class_acc", "class_macro_f1"]
+    save_report_for_all_classes: True
+  Type: simple_ml_multilabel_classifier
+  Model:
+    model_type: bert
+    model_name: /s/ls4/users/grartem/HuggingFace/models/rubert-tiny
+    Args:
+      num_train_epochs: 10
+      output_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/models/rubert_tiny_multilabel/fold_0
+      best_model_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/models/rubert_tiny_multilabel/fold_0/best_model
+
+rubert_tiny_multilabel_fold1:
+  Data:
+    path_to_df: /s/ls4/users/grartem/RL_robots/CommandClassifier/Data/Interim/merged_with_labels_11_patterns_split.csv
+    target_columns: ['y', 'action', 'direction', 'meters', 'degshours', 'object1', 'nearest', 'relation1', 'object2', 'relation2', 'object3', "self", "gaze"]
+    input_column: 'x'
+    test_only_on_fold: 1
+  Report:
+    report_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/reports/rubert_tiny_multilabel_fold1
+    report_metrics: ["correct_samples_perc", "avg_macro_f1", "avg_acc", "class_acc", "class_macro_f1"]
+    save_report_for_all_classes: True
+  Type: simple_ml_multilabel_classifier
+  Model:
+    model_type: bert
+    model_name: /s/ls4/users/grartem/HuggingFace/models/rubert-tiny
+    Args:
+      num_train_epochs: 10
+      output_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/models/rubert_tiny_multilabel/fold_1
+      best_model_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/models/rubert_tiny_multilabel/fold_1/best_model
+
+rubert_tiny_multilabel_fold2:
+  Data:
+    path_to_df: /s/ls4/users/grartem/RL_robots/CommandClassifier/Data/Interim/merged_with_labels_11_patterns_split.csv
+    target_columns: ['y', 'action', 'direction', 'meters', 'degshours', 'object1', 'nearest', 'relation1', 'object2', 'relation2', 'object3', "self", "gaze"]
+    input_column: 'x'
+    test_only_on_fold: 1
+  Report:
+    report_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/reports/rubert_tiny_multilabel_fold2
+    report_metrics: ["correct_samples_perc", "avg_macro_f1", "avg_acc", "class_acc", "class_macro_f1"]
+    save_report_for_all_classes: True
+  Type: simple_ml_multilabel_classifier
+  Model:
+    model_type: bert
+    model_name: /s/ls4/users/grartem/HuggingFace/models/rubert-tiny
+    Args:
+      num_train_epochs: 10
+      output_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/models/rubert_tiny_multilabel/fold_2
+      best_model_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/models/rubert_tiny_multilabel/fold_2/best_model
+
+rubert_tiny_multilabel_fold3:
+  Data:
+    path_to_df: /s/ls4/users/grartem/RL_robots/CommandClassifier/Data/Interim/merged_with_labels_11_patterns_split.csv
+    target_columns: ['y', 'action', 'direction', 'meters', 'degshours', 'object1', 'nearest', 'relation1', 'object2', 'relation2', 'object3', "self", "gaze"]
+    input_column: 'x'
+    test_only_on_fold: 1
+  Report:
+    report_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/reports/rubert_tiny_multilabel_fold3
+    report_metrics: ["correct_samples_perc", "avg_macro_f1", "avg_acc", "class_acc", "class_macro_f1"]
+    save_report_for_all_classes: True
+  Type: simple_ml_multilabel_classifier
+  Model:
+    model_type: bert
+    model_name: /s/ls4/users/grartem/HuggingFace/models/rubert-tiny
+    Args:
+      num_train_epochs: 10
+      output_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/models/rubert_tiny_multilabel/fold_3
+      best_model_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/models/rubert_tiny_multilabel/fold_3/best_model
+rubert_tiny_multilabel_fold4:
+  Data:
+    path_to_df: /s/ls4/users/grartem/RL_robots/CommandClassifier/Data/Interim/merged_with_labels_11_patterns_split.csv
+    target_columns: ['y', 'action', 'direction', 'meters', 'degshours', 'object1', 'nearest', 'relation1', 'object2', 'relation2', 'object3', "self", "gaze"]
+    input_column: 'x'
+    test_only_on_fold: 1
+  Report:
+    report_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/reports/rubert_tiny_multilabel_fold4
+    report_metrics: ["correct_samples_perc", "avg_macro_f1", "avg_acc", "class_acc", "class_macro_f1"]
+    save_report_for_all_classes: True
+  Type: simple_ml_multilabel_classifier
+  Model:
+    model_type: bert
+    model_name: /s/ls4/users/grartem/HuggingFace/models/rubert-tiny
+    Args:
+      num_train_epochs: 10
+      output_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/models/rubert_tiny_multilabel/fold_4
+      best_model_dir: /s/ls4/users/grartem/RL_robots/CommandClassifier/models/rubert_tiny_multilabel/fold_4/best_model
