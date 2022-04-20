@@ -8,6 +8,7 @@ assert torch.cuda.is_available()
 
 import yaml
 import json
+import pyhocon
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
@@ -35,20 +36,28 @@ if __name__=="__main__":
         help="name of experiment to get from config file")
     args = parser.parse_args()
     # setup the experiment
-    with open(args.config_file, "r") as f:
-        experiments = yaml.safe_load(f)
-    EXPERIMENT_NAME = args.experiment_name
-    CONFIG = experiments[EXPERIMENT_NAME]
-
-    if os.path.exists(CONFIG["Report"]["report_dir"]) and len(os.listdir(CONFIG["Report"]["report_dir"]))>0:
-        raise ValueError("report_dir is not empty: {}".format(CONFIG["Report"]["report_dir"]))
-    if not os.path.exists(CONFIG["Report"]["report_dir"]):
-        os.makedirs(CONFIG["Report"]["report_dir"])
-    with open(os.path.join(CONFIG["Report"]["report_dir"], "config.json"), "w") as f:
+    if ".conf" in args.config_file:
+        configFileContent = pyhocon.ConfigFactory.parse_file(args.config_file)
+        CONFIG = configFileContent[args.experiment_name].as_plain_ordered_dict()
+    else:
+        with open(args.config_file, "r") as f:
+            experiments = yaml.safe_load(f)    
+        CONFIG = experiments[args.experiment_name]
+    if os.path.exists(CONFIG["output_dir"]) and len(os.listdir(CONFIG["output_dir"]))>0:
+        raise ValueError("report_dir is not empty: {}".format(CONFIG["output_dir"]))
+    if not os.path.exists(CONFIG["output_dir"]):
+        os.makedirs(CONFIG["output_dir"])
+    with open(os.path.join(CONFIG["output_dir"], "config.json"), "w") as f:
         json.dump(CONFIG, f)
 
     # Prepare data
     train_x_df, train_y_df, valid_x_df, valid_y_df, test_x_df, test_y_df = utils.load_data(**CONFIG["Data"])
+    if CONFIG["Data"].get("add_y_to_x", False):
+        with open(CONFIG["Data"]["y_descriptions_path"], "r") as f:
+            y_descriptioons = json.load(f)
+        train_x_df = train_x_df["y"].map(lambda y: y_descriptioons[int(y)]) + ": " + train_x_df["x"]
+        valid_x_df = valid_x_df["y"].map(lambda y: y_descriptioons[int(y)]) + ": " + valid_x_df["x"]
+        test_x_df = test_x_df["y"].map(lambda y: y_descriptioons[int(y)]) + ": " + test_x_df["x"]
 
     if CONFIG["Type"] == "simple_ml_multilabel_classifier":
         enc = OneHotEncoder()
@@ -64,6 +73,8 @@ if __name__=="__main__":
     train_df.columns = ["text", "labels"]
 
     # Create model
+    CONFIG["Model"]["Args"]["output_dir"] = CONFIG["output_dir"]+"/models/"
+    CONFIG["Model"]["Args"]["best_model_dir"] = CONFIG["output_dir"] + "/models/best_model"
     if CONFIG["Type"] == "simple_ml_multilabel_classifier":
         model_args = MultiLabelClassificationArgs(**CONFIG["Model"]["Args"])
         # Create a MultiLabelClassificationModel
@@ -100,13 +111,13 @@ if __name__=="__main__":
                 shift += len(enc.categories_[j])
         predictions = predictions_2
     result = utils.calculate_metrics_2(valid_y_df, predictions, display=True)
-    with open(os.path.join(CONFIG["Report"]["report_dir"], "classes_report.json"), "w") as f:
+    with open(os.path.join(CONFIG["output_dir"], "classes_report.json"), "w") as f:
         json.dump(result, f)
 
     result_avg = utils.calculate_metrics(valid_y_df, predictions, config={
-        "report_metrics": CONFIG["Report"]["report_metrics"]
+        "report_metrics": CONFIG["output_dir"]
     })
-    with open(os.path.join(CONFIG["Report"]["report_dir"], "avg_report.json"), "w") as f:
+    with open(os.path.join(CONFIG["output_dir"], "avg_report.json"), "w") as f:
         json.dump(result_avg, f)
     for k, v in result_avg.items():
         print(np.round(v*100), "\t", k)

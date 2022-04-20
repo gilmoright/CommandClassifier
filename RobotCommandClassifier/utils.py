@@ -19,7 +19,7 @@ CLASSIFIERS_NAME_TO_CLASS = {
     "RadiusNeighborsClassifier": RadiusNeighborsClassifier
 }
 
-def load_data(path_to_df, input_column="x", target_columns=[], test_only_on_fold=None):
+def load_data(path_to_df, input_column="x", target_columns=[], test_only_on_fold=None, **kwargs):
     """
     Загрузка данных из csv файла path_to_df.
     input_column - колонка с текстом, которая будет использоваться как вход. Пока считаем, что она всегда одна
@@ -27,7 +27,10 @@ def load_data(path_to_df, input_column="x", target_columns=[], test_only_on_fold
     test_only_on_fold - если тест разделён на фолды, и этот параметр не None, то выбираем только указанный фолд, остальное замешиваем в трейн.
     """
     df = pd.read_csv(path_to_df)
-    assert input_column in df.columns
+    if type(input_column)=="str":
+        assert input_column in df.columns
+    else:
+        assert len(set(input_column) & set(df.columns))==len(input_column)
     assert len(set(target_columns) & set(df.columns))==len(target_columns)
 
     row_filter = df["subset"]=="train"

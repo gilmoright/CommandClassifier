@@ -16,8 +16,9 @@ export PATH=$HOME/anaconda3/envs/simptr/bin:$HOME/RL_robots/CommandClassifier:$P
 export LD_LIBRARY_PATH=/s/ls4/sw/cuda/10.1/lib64:/s/ls4/sw/cuda/10.1/nvvm/lib64:$HOME/installation_dists/cudnn-9.0-linux-x64-v7.1.ga/lib64:
 module load gcc/7.3.0
 # RandomForestClassifier ExtraTreesClassifier ExtraTreeClassifier DecisionTreeClassifier KNeighborsClassifier RadiusNeighborsClassifier
-python MultilabelML.py --config_file Configs/SimpleLM.yml --experiment_name rubert_tiny2_multilabel_fold0
 python MultilabelML.py --config_file Configs/SimpleLM.yml --experiment_name rubert_tiny2_multilabel_fold1
-python MultilabelML.py --config_file Configs/SimpleLM.yml --experiment_name rubert_tiny2_multilabel_fold2
-python MultilabelML.py --config_file Configs/SimpleLM.yml --experiment_name rubert_tiny2_multilabel_fold3
-python MultilabelML.py --config_file Configs/SimpleLM.yml --experiment_name rubert_tiny2_multilabel_fold4
+#python MultilabelML.py --config_file Configs/SimpleLM.conf --experiment_name rubert_tiny2_multilabel_useY_fold0
+#python MultilabelML.py --config_file Configs/SimpleLM.conf --experiment_name rubert_tiny2_multilabel_useY_fold1
+#python MultilabelML.py --config_file Configs/SimpleLM.conf --experiment_name rubert_tiny2_multilabel_useY_fold2
+#python MultilabelML.py --config_file Configs/SimpleLM.conf --experiment_name rubert_tiny2_multilabel_useY_fold3
+#python MultilabelML.py --config_file Configs/SimpleLM.conf --experiment_name rubert_tiny2_multilabel_useY_fold4
