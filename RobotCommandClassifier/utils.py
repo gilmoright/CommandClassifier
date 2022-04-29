@@ -51,6 +51,7 @@ def load_data(path_to_df, input_column="x", target_columns=[], test_only_on_fold
         
     return train_x_df, train_y_df, valid_x_df, valid_y_df, test_x_df, test_y_df
 
+
 def calculate_metrics(y_df, predict, config):
     metrics_for_report = {}
     if "correct_samples_perc" in config["report_metrics"]:
