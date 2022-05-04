@@ -22,8 +22,7 @@ from simpletransformers.classification import (
 from RobotCommandClassifier.MyMultilabel import MyMultiLabelClassificationModel, MyMultiLabelClassificationArgs
 from RobotCommandClassifier import utils
 
-if __name__=="__main__":
-    import argparse
+def ValidateConfig_setupExperiment():
     parser = argparse.ArgumentParser(description="Tune some sklearn algorythms")
     # See also the base parser definition in ray/tune/config_parser.py
     parser.add_argument(
@@ -52,9 +51,50 @@ if __name__=="__main__":
     with open(os.path.join(CONFIG["output_dir"], "config.json"), "w") as f:
         json.dump(CONFIG, f)
 
+    return CONFIG
+
+def PrepareModel(CONFIG, num_labels):
+    # Create model
+    CONFIG["Model"]["Args"]["output_dir"] = CONFIG["output_dir"]+"/models/"
+    CONFIG["Model"]["Args"]["best_model_dir"] = CONFIG["output_dir"] + "/models/best_model"
+    if CONFIG["Type"] == "simple_ml_multilabel_classifier":
+        model_args = MultiLabelClassificationArgs(**CONFIG["Model"]["Args"])
+        model = MultiLabelClassificationModel(
+            CONFIG["Model"]["model_type"],
+            CONFIG["Model"]["model_name"],
+            num_labels=num_labels,
+            use_cuda=True,    
+            args=model_args,
+        )
+    elif CONFIG["Type"] == "simple_ml_classifier":
+        model_args = ClassificationArgs(**CONFIG["Model"]["Args"])
+        model = ClassificationModel(
+            CONFIG["Model"]["model_type"],
+            CONFIG["Model"]["model_name"],
+            num_labels=num_labels,
+            use_cuda=True,    
+            args=model_args,
+        )
+    elif CONFIG["Type"] == "mymulti_classifier":
+        model_args = MyMultiLabelClassificationArgs(**CONFIG["Model"]["Args"])
+        # Create a MultiLabelClassificationModel
+        model = MyMultiLabelClassificationModel(
+            CONFIG["Model"]["model_type"],
+            CONFIG["Model"]["model_name"],
+            num_labels=num_labels,
+            use_cuda=True,
+            num_sublabels_per_biglabel = CONFIG["Model"]["num_sublabels_per_biglabel"],
+            add_attention_for_labels=CONFIG["Model"]["add_attention_for_labels"],
+            args=model_args,
+        )
+    else:
+        raise ValueError("unknown Type of experiment:{}".format(CONFIG["Type"]))
+    return model
+
+def PrepareData(CONFIG):
     # Prepare data
     train_x_df, train_y_df, valid_x_df, valid_y_df, test_x_df, test_y_df = utils.load_data(**CONFIG["Data"])
-            
+
     if CONFIG["Data"].get("add_y_to_x", False):
         with open(CONFIG["Data"]["y_descriptions_path"], "r") as f:
             y_descriptioons = json.load(f)
@@ -67,12 +107,12 @@ if __name__=="__main__":
             raise ValueError("Указан флаг для использования только бинарных лейблов. Предполагается, что в таком случае 'y' не должен ыть среди target_columns.")
         train_y_df[train_y_df!=0] = 1
         valid_y_df[valid_y_df!=0] = 1
-        test_y_df[test_y_df!=0] = 1                
+        test_y_df[test_y_df!=0] = 1
     if CONFIG["Type"] in ["simple_ml_multilabel_classifier", "mymulti_classifier"]:
         if CONFIG["Data"].get("predict_label_flag", False):
             labels = train_y_df.values.tolist()
         else:
-            enc = OneHotEncoder()
+            enc = OneHotEncoder(**CONFIG["Data"].get("OneHotArgs", {}))
             enc.fit(train_y_df.values)
     
             labels = []
@@ -84,40 +124,19 @@ if __name__=="__main__":
         train_df = pd.concat([train_x_df, train_y_df], axis=1)
     train_df.columns = ["text", "labels"]
 
-    # Create model
-    CONFIG["Model"]["Args"]["output_dir"] = CONFIG["output_dir"]+"/models/"
-    CONFIG["Model"]["Args"]["best_model_dir"] = CONFIG["output_dir"] + "/models/best_model"
-    if CONFIG["Type"] == "simple_ml_multilabel_classifier":
-        model_args = MultiLabelClassificationArgs(**CONFIG["Model"]["Args"])
-        model = MultiLabelClassificationModel(
-            CONFIG["Model"]["model_type"],
-            CONFIG["Model"]["model_name"],
-            num_labels=len(labels[0]),
-            use_cuda=True,    
-            args=model_args,
-        )
-    elif CONFIG["Type"] == "simple_ml_classifier":
-        model_args = ClassificationArgs(**CONFIG["Model"]["Args"])
-        model = ClassificationModel(
-            CONFIG["Model"]["model_type"],
-            CONFIG["Model"]["model_name"],
-            num_labels=len(train_y_df.iloc[:,0].unique()),
-            use_cuda=True,    
-            args=model_args,
-        )
-    elif CONFIG["Type"] == "mymulti_classifier":
-        model_args = MyMultiLabelClassificationArgs(**CONFIG["Model"]["Args"])
-        # Create a MultiLabelClassificationModel
-        model = MyMultiLabelClassificationModel(
-            CONFIG["Model"]["model_type"],
-            CONFIG["Model"]["model_name"],
-            num_labels=len(labels[0]),
-            use_cuda=True,
-            num_sublabels_per_biglabel = CONFIG["Model"]["num_sublabels_per_biglabel"],
-            args=model_args,
-        )
+    if CONFIG["Type"] == "simple_ml_classifier":
+        num_labels = len(train_y_df.iloc[:,0].unique())
     else:
-        raise ValueError("unknown Type of experiment:{}".format(CONFIG["Type"]))
+        num_labels = len(labels[0])
+    return train_df, num_labels
 
+if __name__=="__main__":
+    import argparse
+    
+    CONFIG = ValidateConfig_setupExperiment()
+    
+
+    train_df, num_labels = PrepareData(CONFIG)
+    model = PrepareModel(CONFIG, num_labels)
     # Train the model
     model.train_model(train_df, overwrite_output_dir=True)
