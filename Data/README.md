@@ -1,3 +1,9 @@
+# Raw
+- generated_with_vector.csv - кажется это первая версия
+- merged_with_labels.csv
+- merged_with_labels_11_patterns.csv - 
+- 12052022_one_cmd.csv - 6,7 и 8 Y могут содержать больше action. То есть больше экшенов могут быть с объектами.
+- 12052022_some_cmd.csv - составные команды. От двух до трёх команд в одной фразе. Добавлен атрибут delayed
 # Interim
 Файл merged_with_labels_11_patterns_split.csv - команды разделены на множества (трейн, валид, тест)
  - type - колонка, указывающая источник данных (generator и new_generator - искусственные данные, crowdsource, students - нагенерировано людьми)

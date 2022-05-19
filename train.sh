@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH -J rubert_tiny2_multilabel_noYno0_fold0
+#SBATCH -J MyMultiTiny2_data2_fold0
 #SBATCH -D /s/ls4/users/grartem/RL_robots/CommandClassifier
 #SBATCH -o /s/ls4/users/grartem/RL_robots/CommandClassifier/Logs/train_%x_%j.out
 #SBATCH -e /s/ls4/users/grartem/RL_robots/CommandClassifier/Logs/train_%x_%j.err
@@ -21,8 +21,8 @@ module load gcc/7.3.0
 #python MultilabelML.py --config_file Configs/SimpleLM.conf --experiment_name rubert_tiny2_multilabel_noYno0_fold2 &
 #python MultilabelML.py --config_file Configs/SimpleLM.conf --experiment_name rubert_tiny2_multilabel_noYno0_fold3 &
 #python MultilabelML.py --config_file Configs/SimpleLM.conf --experiment_name rubert_tiny2_multilabel_noYno0_fold4
-python MultilabelML.py --config_file Configs/CustomML.conf --experiment_name MyMultiTiny2_att_fold4
-#python MultilabelML.py --config_file Configs/CustomML.conf --experiment_name MyMultiTiny2_fold1
-#python MultilabelML.py --config_file Configs/CustomML.conf --experiment_name MyMultiTiny2_fold2
-#python MultilabelML.py --config_file Configs/CustomML.conf --experiment_name MyMultiTiny2_fold3
-#python MultilabelML.py --config_file Configs/CustomML.conf --experiment_name MyMultiTiny2_fold4
+python MultilabelML.py --config_file Configs/CustomML.conf --experiment_name MyMultiTiny2_data2_fold0
+#python MultilabelML.py --config_file Configs/CustomML.conf --experiment_name MyMultiTiny2_data2_fold1
+#python MultilabelML.py --config_file Configs/CustomML.conf --experiment_name MyMultiTiny2_data2_fold2
+#python MultilabelML.py --config_file Configs/CustomML.conf --experiment_name MyMultiTiny2_data2_fold3
+#python MultilabelML.py --config_file Configs/CustomML.conf --experiment_name MyMultiTiny2_data2_fold4
