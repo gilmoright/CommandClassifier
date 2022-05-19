@@ -152,7 +152,7 @@ class MyBertForMultiLabelSequenceClassification(BertPreTrainedModel):
                 shift += num_sublabels
             assert shift == self.num_labels
             loss = sum(losses) / len(losses)
-        outputs = (loss,) + outputs
+            outputs = (loss,) + outputs
 
         return outputs  # (loss), logits, (hidden_states), (attentions)
 
