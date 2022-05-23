@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import numpy as np
 import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -51,6 +52,39 @@ def load_data(path_to_df, input_column="x", target_columns=[], test_only_on_fold
         
     return train_x_df, train_y_df, valid_x_df, valid_y_df, test_x_df, test_y_df
 
+def binarymultilabel_to_multiclassmultilabel(raw_outputs, classes_per_attribute, CONFIG):
+    """
+    Функция переводит бинарный вектор, в котором каждая компонента - активность (от 0 до 1) какого-либо класса для какого-либо лейбла (атрибута)
+    в вектор где каждая компоненты - целое число (номер класса) для одного лейбла.
+    например [0,1,0,0,1,0,0,0,0,0,0,0,1] -> [1,0,4]
+    params:
+        raw_outputs - 2д массив (samples, number_of_binary_predictions)
+        classes_per_attribute - количество классов внутри каждого лейбла.
+        CONFIG - конфиг эксперимента
+    return:
+        2д массив (samples, number_of_labels)
+    """
+    predictions_2 = np.zeros((len(raw_outputs), len(classes_per_attribute)))
+    for i in range(len(raw_outputs)):
+        shift = 0
+        for j in range(len(classes_per_attribute)):
+            if "OneHotArgs" in CONFIG["Data"] and CONFIG["Data"]["OneHotArgs"].get('drop', None) == "first":
+                # Эксперимент, когда для каждого класса предсказывается сигмойда, 
+                # а если для лейбла нет класса с активностью превысевшей порог, то класс 0. 
+                # для самого класса 0 при этом активности нет.
+                label_logits = raw_outputs[i, shift:shift+classes_per_attribute[j]-1]
+                # предполагается, что выходы модели были сигмойдами
+                assert max(label_logits) < 1.0001
+                if sum(label_logits>=0.5)==0:
+                    predictions_2[i,j] = 0
+                else:
+                    predictions_2[i,j] = np.argmax(label_logits)+1
+                shift += classes_per_attribute[j]-1
+            else:
+                predictions_2[i,j] = np.argmax(raw_outputs[i, shift:shift+classes_per_attribute[j]])
+                shift += classes_per_attribute[j]
+        assert shift==len(raw_outputs[0])
+    return predictions_2
 
 def calculate_metrics(y_df, predict, config):
     metrics_for_report = {}
