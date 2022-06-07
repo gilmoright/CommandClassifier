@@ -131,6 +131,7 @@ def PrepareInput_for_simpletransformers(train_x_df, train_y_df, CONFIG):
             encoded_labels = enc.transform(train_y_df.values).toarray().astype(int)
             for i in range(train_y_df.shape[0]):
                 labels.append(encoded_labels[i].tolist())
+            print("labels", labels)
         train_df = pd.DataFrame(list(zip(train_x_df, labels)))        
     else:
         # Скорее всего это просто одноклассовый классификатор, можно не приводить к one-hot
@@ -141,6 +142,7 @@ def PrepareInput_for_simpletransformers(train_x_df, train_y_df, CONFIG):
         num_labels = len(train_y_df.iloc[:,0].unique())
     else:
         num_labels = len(labels[0])
+        print("num_labels", num_labels)
     return train_df, enc, num_labels
 
 if __name__=="__main__":
