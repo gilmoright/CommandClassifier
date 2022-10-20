@@ -9,7 +9,7 @@ sbatch <<EOT
 #SBATCH -p hpc5-el7-gpu-3d
 #SBATCH -n 1
 #SBATCH --gres=gpu:k80:1
-#SBATCH --time=24:00:00
+#SBATCH --time=72:00:00
 
 export HOME=/s/ls4/users/grartem
 #export PATH=\$HOME/anaconda3/envs/rl_robots/bin:\$PATH

@@ -83,6 +83,7 @@ def PrepareModel(CONFIG):
             CONFIG["Model"]["model_type"],
             CONFIG["Model"]["model_name"],
             CONFIG["Model"]["num_labels"],
+            CONFIG["Model"].get("pos_weight", None),
             use_cuda=True,
             num_sublabels_per_biglabel = CONFIG["Model"]["num_sublabels_per_biglabel"],
             add_attention_for_labels=CONFIG["Model"]["add_attention_for_labels"],
