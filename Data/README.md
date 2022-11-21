@@ -4,6 +4,12 @@
 - merged_with_labels_11_patterns.csv - 
 - 12052022_one_cmd.csv - 6,7 и 8 Y могут содержать больше action. То есть больше экшенов могут быть с объектами.
 - 12052022_some_cmd.csv - составные команды. От двух до трёх команд в одной фразе. Добавлен атрибут delayed
+- one_cmd_v3_03062022.csv - 
+- one_cmd_v4_05072022.csv - 
+- data_v5.jsonl - для того, чтобы попробовать подход с выделением атрибутов, попросил макса сгенерировать команды с разметкой. Тут они. Сами команды возможно отличаются от v4.
+- NERannontated_fixed_oldcrowd.jsonl - краудсорс команды из merged_with_labels_11_patterns размеченные на атрибуты, также некоторые поменяли целевые вектора или были удалены, тексты тоже могли меняться.
+- data_v6.jsonl (zip) - большая часть взята из data_v5, удалены примеры где relation_1, self или degshours не нулевые. Вместо них добавлены новые команды для degrees, follow, hour_yandex, relation1, relation2, self, turn_around. Колонка degshours разеделена на 2 - degs, hours.
+
 # Interim
 Файл merged_with_labels_11_patterns_split.csv - команды разделены на множества (трейн, валид, тест)
  - type - колонка, указывающая источник данных (generator и new_generator - искусственные данные, crowdsource, students - нагенерировано людьми)

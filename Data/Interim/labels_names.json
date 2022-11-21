@@ -1,15 +1,16 @@
 {
     "y": ["simple", "direction", "meter", "degree", "hour", "object", "nearest", "relation1", "relation2", "circle", "self", "gaze"],
-    "action": ["patrol", "stop", "move_dir", "rotate_dir", "move_on", "rotate_on", "move_to", "find", "go_around", "monitor", "rotate_to", "pause", "continue", "analyze"],
+    "action": ["patrol", "stop", "move_dir", "rotate_dir", "move_on", "rotate_on", "move_to", "find", "go_around", "monitor", "rotate_to", "pause", "continue", "analyze", "follow"],
     "direction": ["", "dir_forward", "dir_backward", "dir_right", "dir_left", "dir_north", "dir_south", "dir_east", "dir_west"],
     "meters": ["", "1", "3", "5", "7", "10", "15", "20", "25", "35", "50", "75","100"],
-    "degshours": ["", "15", "30", "45", "60", "75","90", "105", "120", "135", "150","165", "180", "195", "210","225", "240", "255", "270","285", "300", "315", "330","345", "360"],
+    "degs": ["", "15", "30", "45", "60", "75","90", "105", "120", "135", "150","165", "180", "195", "210","225", "240", "255", "270","285", "300", "315", "330","345", "360"],
+    "hours": ["", "0.5", "1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5", "5.0", "5.5", "6.0", "6.5", "7.0", "7.5", "8.0", "8.5", "9.0", "9.5", "10.0", "10.5", "11.0", "11.5", "12.0"],
     "object1": ["", "house", "tree", "broken_tree","forest", "pit", "human", "hill","fissure", "man_lay", "rock", "butte","barrier", "lamp_post", "car", "circle", "route"],
     "nearest": ["",  "nearest_from_type"],
-    "relation1": ["", "near", "behind_of", "in_front_of","to_left_from", "to_right_from"],
+    "relation1": ["", "near", "behind_of", "in_front_of","to_left_from", "to_right_from", "to_north_from", "to_south_from", "to_east_from", "to_west_from"],
     "object2": ["", "house", "tree", "broken_tree","forest", "pit", "human", "hill","fissure", "man_lay", "rock", "butte","barrier", "lamp_post", "car"],
-    "relation2": ["", "near", "behind_of", "in_front_of","to_left_from", "to_right_from"],
+    "relation2": ["", "near", "behind_of", "in_front_of","to_left_from", "to_right_from", "to_north_from", "to_south_from", "to_east_from", "to_west_from"],
     "object3": ["", "house", "tree", "broken_tree","forest", "pit", "human", "hill","fissure", "man_lay", "rock", "butte","barrier", "lamp_post", "car"],
-    "self": ["", "behind_of", "in_front_of", "to_left_from","to_right_from"],
+    "self": ["", "behind_of", "in_front_of", "to_left_from","to_right_from", "to_north_from", "to_south_from", "to_east_from", "to_west_from"],
     "gaze": ["", "has_gaze_focus_on"]
 }
