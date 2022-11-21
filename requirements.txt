@@ -1,0 +1,8 @@
+torch==1.10.0
+pyyaml
+pyhocon
+joblib
+pandas
+sklearn
+simpletransformers==0.63.6
+matplotlib
