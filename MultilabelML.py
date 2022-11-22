@@ -24,6 +24,9 @@ from RobotCommandClassifier.MyMultilabel import MyMultiLabelClassificationModel,
 from RobotCommandClassifier import utils
 
 def ValidateConfig_setupExperiment():
+    """
+    Считывание конфига, его проверка и создание папки под эксперимент.
+    """
     parser = argparse.ArgumentParser(description="Tune some sklearn algorythms")
     # See also the base parser definition in ray/tune/config_parser.py
     parser.add_argument(
@@ -49,6 +52,7 @@ def ValidateConfig_setupExperiment():
         raise ValueError("report_dir is not empty: {}".format(CONFIG["output_dir"]))
     if not os.path.exists(CONFIG["output_dir"]):
         os.makedirs(CONFIG["output_dir"])
+    # сохраним конфиг в папке, чтоб знать, с чего мы запускали, даже если файл с конфигами изменится.
     with open(os.path.join(CONFIG["output_dir"], "config.json"), "w") as f:
         json.dump(CONFIG, f)
 
